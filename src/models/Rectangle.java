@@ -34,6 +34,22 @@ public class Rectangle {
     public void setBotRight(Vector2 p2) {
         this.botRight = p2;
     }
+    
+    public double getTop() {
+        return topLeft.getY();
+    }
+    
+    public double getBottom() {
+        return botRight.getY();
+    }
+    
+    public double getLeft() {
+        return topLeft.getX();
+    }
+    
+    public double getRight() {
+        return botRight.getX();
+    }
 
     public double getWidth() {
         return botRight.getX() - topLeft.getX();

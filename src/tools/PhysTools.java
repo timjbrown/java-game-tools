@@ -17,7 +17,7 @@ public class PhysTools {
     public static boolean colliding(CircleBody c1, CircleBody c2) {
         return distance(c1, c2) < c1.getRadius() + c2.getRadius();
     }
-    
+
     public static boolean colliding(CircleBody circle, Rectangle rect) {
         double cx = circle.getPos().getX();
         double cy = circle.getPos().getY();
@@ -90,40 +90,19 @@ public class PhysTools {
         if (!c.isCollidable())
             return false;
 
-        boolean left = bounceOffLeft(rect, c);
-        boolean right = bounceOffRight(rect, c);
-        boolean top = bounceOffTop(rect, c);
-        boolean bottom = bounceOffBottom(rect, c);
-
-        boolean bounced = false;
-        if (left) { // left
-            c.setVel(new Vector2(-c.getVel().getX(), c.getVel().getY()));
-            c.setPos(new Vector2(rect.getTopLeft().getX() + c.getRadius(),
-                    c.getPos().getY()));
-            bounced = true;
+        double cx = c.getPos().getX();
+        double cy = c.getPos().getY();
+        double cr = c.getRadius();
+        double rx = rect.getLeft();
+        double ry = rect.getTop();
+        double rw = rect.getWidth();
+        double rh = rect.getHeight();
+        Vector2 overlap = OverlapTools.circleInRect(cx, cy, cr, rx, ry, rw, rh);
+        if (overlap != null) {
+            c.setPos(c.getPos().add(overlap));
+            c.setVel(c.getVel().follow(overlap).mul(restitution));
         }
-        if (top) { // top
-            c.setVel(new Vector2(c.getVel().getX(), -c.getVel().getY()));
-            c.setPos(new Vector2(c.getPos().getX(),
-                    rect.getTopLeft().getY() + c.getRadius()));
-            bounced = true;
-        }
-        if (right) { // right
-            c.setVel(new Vector2(-c.getVel().getX(), c.getVel().getY()));
-            c.setPos(new Vector2(rect.getBotRight().getX() - c.getRadius(),
-                    c.getPos().getY()));
-            bounced = true;
-        }
-        if (bottom) { // bottom
-            c.setVel(new Vector2(c.getVel().getX(), -c.getVel().getY()));
-            c.setPos(new Vector2(c.getPos().getX(),
-                    rect.getBotRight().getY() - c.getRadius()));
-            bounced = true;
-        }
-
-        if (bounced)
-            c.setVel(c.getVel().mul(restitution));
-        return bounced;
+        return overlap != null;
     }
 
     public static boolean bounceOffLeft(Rectangle rect, CircleBody c) {

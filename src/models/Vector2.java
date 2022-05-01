@@ -9,17 +9,22 @@ public class Vector2 {
 
     /**
      * Creates a Vector2 from radians in range (-pi,pi)
-     * @param radians in range (-pi,pi)
+     * 
+     * @param radians
+     *            in range (-pi,pi)
      */
     public Vector2(double radians) {
         this.x = Math.cos(radians);
         this.y = Math.sin(radians);
     }
-    
+
     /**
      * Creates a Vector2 from x,y components
-     * @param x component of the vector
-     * @param y component of the vector
+     * 
+     * @param x
+     *            component of the vector
+     * @param y
+     *            component of the vector
      */
     public Vector2(double x, double y) {
         this.x = x;
@@ -28,15 +33,18 @@ public class Vector2 {
 
     /**
      * Creates a Vector2 from x,y components of the given point
-     * @param point whose x,y components form the vector
+     * 
+     * @param point
+     *            whose x,y components form the vector
      */
     public Vector2(Point point) {
         this.x = point.x;
         this.y = point.y;
     }
-    
+
     /**
      * Create a Vector2 randomly between minX,maxX and minY,maxY components
+     * 
      * @param minX
      * @param maxX
      * @param minY
@@ -46,13 +54,17 @@ public class Vector2 {
         this.x = Math.random() * (maxX - minX) + minX;
         this.y = Math.random() * (maxY - minY) + minY;
     }
-    
+
     public static Vector2 zero() {
         return new Vector2(0, 0);
     }
 
     public Vector2 copy() {
         return new Vector2(x, y);
+    }
+
+    public static Vector2 fromAngle(double radians, double length) {
+        return new Vector2(Math.cos(radians), Math.sin(radians)).mul(length);
     }
 
     public double dist(Vector2 other) {
@@ -67,7 +79,7 @@ public class Vector2 {
     public double dot(Vector2 other) {
         return x * other.x + y * other.y;
     }
-    
+
     public Vector2 neg() {
         return this.mul(-1);
     }
@@ -83,6 +95,10 @@ public class Vector2 {
         return new Vector2(x * val, y * val);
     }
 
+    public Vector2 mul(double xval, double yval) {
+        return new Vector2(x * xval, y * yval);
+    }
+
     public Vector2 add(Vector2 other) {
         return new Vector2(x + other.x, y + other.y);
     }
@@ -96,22 +112,37 @@ public class Vector2 {
         double s = Math.sin(theta);
         return new Vector2(x * c - y * s, x * s + y * c);
     }
-    
+
+    public Vector2 follow(Vector2 other) {
+        double newx = x;
+        double newy = y;
+        if (Math.abs(Math.signum(x) - Math.signum(other.x)) == 2)
+            newx *= -1;
+        if (Math.abs(Math.signum(y) - Math.signum(other.y)) == 2)
+            newy *= -1;
+        return new Vector2(newx, newy);
+    }
+
     /**
      * Returns angle between 2 vectors in range (-pi,pi)
-     * @param other the second vector whose angle between will be found
+     * 
+     * @param other
+     *            the second vector whose angle between will be found
      * @return angle between 2 vectors in range (-pi,pi)
      */
     public double angleBetween(Vector2 other) {
-        double result =  Math.atan2(other.getY(), other.getX()) - Math.atan2(this.getY(), this.getX());
+        double result = Math.atan2(other.getY(), other.getX())
+                - Math.atan2(this.getY(), this
+                                              .getX());
         if (result > Math.PI) {
-        return (Math.PI * 2 - result) * (-1);
+            return (Math.PI * 2 - result) * (-1);
         }
         return result;
     }
-    
+
     /**
      * Returns the angle of this vector in radians
+     * 
      * @return the angle of this vector in radians
      */
     public double getRadians() {
